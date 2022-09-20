@@ -15,6 +15,7 @@ use BaserCore\Service\BcDatabaseServiceInterface;
 use BaserCore\Test\Factory\ContentFolderFactory;
 use BaserCore\Test\Factory\PageFactory;
 use BaserCore\Test\Factory\ContentFactory;
+use BaserCore\Test\Factory\SearchIndexesFactory;
 use BaserCore\Test\Factory\SiteConfigFactory;
 use BaserCore\Test\Factory\SiteFactory;
 use BaserCore\Test\Factory\UserFactory;
@@ -51,6 +52,7 @@ class BcDatabaseServiceTest extends BcTestCase
         'plugin.BaserCore.Factory/ContentFolders',
         'plugin.BaserCore.Factory/Pages',
         'plugin.BaserCore.Factory/SiteConfigs',
+        'plugin.BaserCore.Factory/SearchIndexes',
     ];
 
     /**
@@ -213,6 +215,8 @@ class BcDatabaseServiceTest extends BcTestCase
         UserFactory::make(['name' => 'Chuong Le', 'email' => 'chuong.le@mediabridge.asia'])->persist();
         UserGroupFactory::make(['name' => 'test group', 'title' => 'test title'])->persist();
         ContentFolderFactory::make(['folder_template' => 'temp1', 'page_template' => 'temp2'])->persist();
+        SearchIndexesFactory::make(['type' => 'test type', 'model' => 'test model'])->persist();
+
         $this->BcDatabaseService->resetAllTables($excludes);
         $this->assertEquals(1, SiteConfigFactory::count());
         $this->assertEquals(1, SiteFactory::count());
@@ -220,6 +224,7 @@ class BcDatabaseServiceTest extends BcTestCase
         $this->assertEquals(0, UserFactory::count());
         $this->assertEquals(0, UserGroupFactory::count());
         $this->assertEquals(0, ContentFolderFactory::count());
+        $this->assertEquals(0, SearchIndexesFactory::count());
     }
 
     /**
