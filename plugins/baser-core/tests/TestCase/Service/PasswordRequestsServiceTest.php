@@ -14,6 +14,7 @@ namespace BaserCore\Test\TestCase\Service;
 use BaserCore\Service\PasswordRequestsService;
 use BaserCore\Service\PasswordRequestsServiceInterface;
 use BaserCore\Test\Factory\PasswordRequestFactory;
+use BaserCore\Test\Factory\UserFactory;
 use BaserCore\Test\Scenario\InitAppScenario;
 use BaserCore\TestSuite\BcTestCase;
 use BaserCore\Utility\BcContainerTrait;
@@ -126,7 +127,16 @@ class PasswordRequestsServiceTest extends BcTestCase
      */
     public function testUpdate()
     {
-        $this->markTestIncomplete('このテストは、まだ実装されていません。');
+        UserFactory::make(['id' => 1, 'email' => 'chuongle@mediabridge.asia'])->persist();
+        PasswordRequestFactory::make(['id' => 1])->persist();
+        $entity = PasswordRequestFactory::get(1);
+        $postData = ['email' => 'noexist@mail.com'];
+        $result = $this->service->update($entity, $postData);
+        $this->assertFalse($result);
+        $postData = ['email' => 'chuongle@mediabridge.asia'];
+        $result = $this->service->update($entity, $postData);
+        $this->assertEquals(1, $result->user_id);
+        $this->assertEquals(0, $result->used);
     }
 
     /**
