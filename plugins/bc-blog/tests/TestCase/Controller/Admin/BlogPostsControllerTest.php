@@ -16,6 +16,8 @@ namespace BcBlog\Test\TestCase\Controller\Admin;
 use BaserCore\Test\Scenario\InitAppScenario;
 use BaserCore\TestSuite\BcTestCase;
 use BcBlog\Controller\Admin\BlogPostsController;
+use BcBlog\Test\Scenario\BlogContentScenario;
+use Cake\Event\Event;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 
 /**
@@ -43,6 +45,7 @@ class BlogPostsControllerTest extends BcTestCase
         'plugin.BaserCore.Factory/UsersUserGroups',
         'plugin.BaserCore.Factory/UserGroups',
         'plugin.BcBlog.Factory/BlogPosts',
+        'plugin.BcBlog.Factory/BlogContents',
     ];
 
     /**
@@ -81,7 +84,15 @@ class BlogPostsControllerTest extends BcTestCase
      */
     public function testBeforeFilter()
     {
-        $this->markTestIncomplete('このテストは、まだ実装されていません。');
+        $this->loadFixtureScenario(BlogContentScenario::class, 1, 1, null, 'test', '/');
+        $event = new Event('Controller.beforeFilter', $this->BlogPostsController);
+        $request = $this->getRequest()->withParam('pass.0', 1);
+        $this->BlogPostsController->setRequest($request);
+        $this->BlogPostsController->beforeFilter($event);
+        $request = $this->BlogPostsController->getRequest();
+        $this->assertEquals(1, $request->getAttribute('currentContent')->id);
+        // TODO BlogPostsTable のファイルアップロードの設定を実施
+        // TODO エディタ用のヘルパーをセット
     }
 
     /**
